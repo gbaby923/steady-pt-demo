@@ -279,10 +279,10 @@ p { color: var(--gray-700); }
   top: 100%;
   left: 0;
   right: 0;
-  background: var(--white);
+  background: var(--navy);
   box-shadow: var(--shadow-lg);
   padding: 20px 0 28px;
-  border-top: 1px solid var(--gray-200);
+  border-top: 1px solid rgba(255,255,255,.15);
 }
 .mobile-menu.open { display: block; }
 .mobile-menu .nav-link {
@@ -290,15 +290,25 @@ p { color: var(--gray-700); }
   padding: 14px 24px;
   font-size: 1rem;
   border-radius: 0;
-  color: var(--gray-800);
+  color: rgba(255,255,255,.9);
 }
-.mobile-menu .nav-link:hover { background: var(--gray-50); color: var(--navy); }
+.mobile-menu .nav-link:hover { background: rgba(255,255,255,.1); color: var(--white); }
 .mobile-menu .btn { margin: 12px 24px 0; display: block; text-align: center; }
 .mobile-menu .nav-phone {
   display: flex;
   padding: 14px 24px;
-  color: var(--gray-700);
+  color: rgba(255,255,255,.9);
 }
+
+/* Nav: solid navy whenever the mobile menu is open, regardless of scroll position */
+.site-nav:has(.mobile-menu.open) {
+  background: var(--navy);
+  box-shadow: 0 2px 20px rgba(0,0,0,.15);
+}
+.site-nav:has(.mobile-menu.open) .nav-logo-light { display: block; }
+.site-nav:has(.mobile-menu.open) .nav-logo-dark { display: none; }
+.site-nav:has(.mobile-menu.open) .logo-steady { color: var(--white); }
+.site-nav:has(.mobile-menu.open) .hamburger span { background: var(--white); }
 
 /* ============================================================
    HERO
@@ -337,6 +347,9 @@ p { color: var(--gray-700); }
   z-index: 2;
   padding: 140px 0 100px;
   width: 100%;
+}
+@media (max-width: 640px) {
+  .hero-content { padding: 100px 0 60px; }
 }
 .hero-eyebrow {
   display: inline-flex;
@@ -1195,6 +1208,7 @@ p { color: var(--gray-700); }
   opacity: 0;
   pointer-events: none;
   transition: transform 0.28s cubic-bezier(.34,1.56,.64,1), opacity 0.2s ease;
+  height: min(560px, calc(100dvh - 120px));
   max-height: min(560px, calc(100dvh - 120px));
 }
 .chat-widget.open .chat-panel {
@@ -1234,6 +1248,7 @@ p { color: var(--gray-700); }
   gap: 16px;
   min-height: 0;
   scroll-behavior: smooth;
+  overscroll-behavior: contain;
 }
 .chat-messages::-webkit-scrollbar { width: 4px; }
 .chat-messages::-webkit-scrollbar-track { background: transparent; }
@@ -1322,6 +1337,7 @@ p { color: var(--gray-700); }
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  flex-shrink: 0;
 }
 .quick-reply-btn {
   padding: 7px 14px;
