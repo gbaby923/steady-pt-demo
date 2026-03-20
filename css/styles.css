@@ -187,8 +187,32 @@ p { color: var(--gray-700); }
   gap: 20px;
 }
 .nav-logo img { height: 44px; width: auto; }
-.nav-logo-light { height: 65px; width: auto; }
-.nav-logo-dark  { height: 65px; width: auto; }
+.nav-logo-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 70px;
+  gap: 2px;
+  line-height: 1;
+}
+.logo-steady {
+  font-family: 'Arial Black', 'Arial Bold', Impact, Arial, sans-serif;
+  font-weight: 900;
+  font-size: 30px;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  line-height: 1;
+  transition: color var(--transition);
+}
+.logo-pt {
+  font-family: 'Arial Black', 'Arial Bold', Impact, Arial, sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--orange);
+  line-height: 1;
+}
+.site-nav.scrolled .logo-steady { color: var(--navy); }
 
 .nav-links {
   display: none;
