@@ -187,8 +187,8 @@ p { color: var(--gray-700); }
   gap: 20px;
 }
 .nav-logo img { height: 44px; width: auto; }
-.nav-logo-light { height: 44px; width: auto; }
-.nav-logo-dark  { height: 44px; width: auto; }
+.nav-logo-light { height: 44px; width: auto; mix-blend-mode: screen; }
+.nav-logo-dark  { height: 44px; width: auto; filter: invert(1); mix-blend-mode: multiply; }
 
 .nav-links {
   display: none;
@@ -767,7 +767,7 @@ p { color: var(--gray-700); }
   height: 56px;
   width: auto;
   margin-bottom: 20px;
-  filter: brightness(0) invert(1);
+  mix-blend-mode: screen;
   opacity: .9;
 }
 .footer-brand p {
