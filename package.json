@@ -1,0 +1,27 @@
+{
+  "name": "steady-pt-demo",
+  "version": "1.0.0",
+  "description": "Steady Physical Therapy — demo website with Claude AI chat widget",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.37.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "physical-therapy",
+    "van-nuys",
+    "healthcare",
+    "claude-ai"
+  ]
+}
