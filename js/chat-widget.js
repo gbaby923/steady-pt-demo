@@ -145,6 +145,98 @@
     if (el) el.remove();
   }
 
+  // ---- BOOKING INTENT DETECTION ----
+  const BOOKING_KEYWORDS = /\b(schedul|book|appointment|appt|set up|reserve|sign up|get in|come in|visit|schedule me|book me)\b/i;
+
+  function isBookingIntent(text) {
+    return BOOKING_KEYWORDS.test(text);
+  }
+
+  function showBookingForm() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'chat-msg bot';
+    wrapper.innerHTML = `
+      <div class="chat-msg-avatar" aria-hidden="true">PT</div>
+      <div class="booking-form-bubble">
+        <p class="booking-form-intro">Great! Fill out the form below and we'll get you scheduled.</p>
+        <form class="booking-form" id="bookingForm" novalidate>
+          <div class="booking-field">
+            <label for="bf-name">Full Name <span aria-hidden="true">*</span></label>
+            <input id="bf-name" type="text" placeholder="Jane Smith" autocomplete="name" required />
+          </div>
+          <div class="booking-field">
+            <label for="bf-phone">Phone Number <span aria-hidden="true">*</span></label>
+            <input id="bf-phone" type="tel" placeholder="(818) 555-0100" autocomplete="tel" required />
+          </div>
+          <div class="booking-field">
+            <label for="bf-service">Service Needed <span aria-hidden="true">*</span></label>
+            <select id="bf-service" required>
+              <option value="" disabled selected>Select a service…</option>
+              <option>Orthopedic Rehabilitation</option>
+              <option>Sports Injury Recovery</option>
+              <option>Post-Surgical Rehab</option>
+              <option>Chronic Pain Management</option>
+              <option>Balance &amp; Mobility</option>
+              <option>Workers' Compensation</option>
+              <option>Auto Accident (MVA) Rehab</option>
+              <option>General / Not Sure</option>
+            </select>
+          </div>
+          <div class="booking-field">
+            <label for="bf-datetime">Preferred Date &amp; Time <span aria-hidden="true">*</span></label>
+            <input id="bf-datetime" type="datetime-local" required />
+          </div>
+          <div class="booking-field">
+            <label for="bf-insurance">Insurance Card Photo <span class="booking-optional">(optional)</span></label>
+            <label class="booking-file-label" for="bf-insurance">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <span id="bf-insurance-label">Upload photo</span>
+            </label>
+            <input id="bf-insurance" type="file" accept="image/*" class="booking-file-input" aria-label="Upload insurance card photo" />
+          </div>
+          <div class="booking-field-error" id="bookingError" role="alert" aria-live="polite"></div>
+          <button type="submit" class="booking-submit-btn">Request Appointment</button>
+        </form>
+      </div>`;
+
+    messages.appendChild(wrapper);
+    scrollToBottom();
+
+    // File label update
+    const fileInput = wrapper.querySelector('#bf-insurance');
+    const fileLabel = wrapper.querySelector('#bf-insurance-label');
+    fileInput.addEventListener('change', () => {
+      fileLabel.textContent = fileInput.files[0] ? fileInput.files[0].name : 'Upload photo';
+    });
+
+    // Form submit
+    const form = wrapper.querySelector('#bookingForm');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = form.querySelector('#bf-name').value.trim();
+      const phone = form.querySelector('#bf-phone').value.trim();
+      const service = form.querySelector('#bf-service').value;
+      const datetime = form.querySelector('#bf-datetime').value;
+      const errorEl = form.querySelector('#bookingError');
+
+      if (!name || !phone || !service || !datetime) {
+        errorEl.textContent = 'Please fill in all required fields.';
+        return;
+      }
+      errorEl.textContent = '';
+
+      // Replace form with confirmation
+      wrapper.innerHTML = `
+        <div class="chat-msg-avatar" aria-hidden="true">PT</div>
+        <div class="booking-confirm-bubble">
+          <div class="booking-confirm-icon" aria-hidden="true">✓</div>
+          <strong>Request Received!</strong>
+          <p>Thanks, <strong>${escapeHtml(name)}</strong>! We've got your request for <strong>${escapeHtml(service)}</strong>. Our team will call you at <strong>${escapeHtml(phone)}</strong> to confirm your appointment. See you soon!</p>
+        </div>`;
+      scrollToBottom();
+    });
+  }
+
   // ---- SEND MESSAGE ----
   async function sendMessage(text) {
     const content = (text || input.value).trim();
@@ -157,6 +249,14 @@
 
     appendMessage('user', content);
     state.history.push({ role: 'user', content });
+
+    // Show booking form instead of calling API
+    if (isBookingIntent(content)) {
+      showBookingForm();
+      state.history.push({ role: 'assistant', content: '[Booking form displayed]' });
+      state.loading = false;
+      return;
+    }
 
     state.loading = true;
     showTyping();
